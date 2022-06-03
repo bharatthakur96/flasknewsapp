@@ -12,14 +12,14 @@
             <h3><a class="article-title" href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.title }}</a></h3>
             <p class="article-content">{{ post.content }}</p>
           </div>
+          <a href="{{ url_for('posts.add_to_wishlist', post_id=post.id) }}">
+            {% if post in  current_user.wishlist.posts %}
+            <a href="{{ url_for('posts.remove_wishlist', post_id=post.id) }}"><img id="cart-icon" src="{{ url_for('static', filename='save.png') }}" width="30" height="35"></a>
+            {% else %}
+            <img id="cart-icon" src="{{ url_for('static', filename='wl.png') }}" width="25" height="25">
+            {% endif %}
+          </a>
         </article>
-        <a href="{{ url_for('posts.add_to_wishlist', post_id=post.id) }}">
-          {% if post in  current_user.wishlist.posts %}
-          <img id="cart-icon" src="{{ url_for('static', filename='save.png') }}" width="30" height="35">
-          {% else %}
-          <img id="cart-icon" src="{{ url_for('static', filename='wl.png') }}" width="30" height="35">
-          {% endif %}
-        </a>
         {% endfor %}
         <br><br>
     {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}

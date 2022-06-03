@@ -8,6 +8,8 @@ from flaskblog.posts.forms import PostForm
 posts = Blueprint("posts", __name__)
 
 
+
+
 @posts.route("/post/new", methods=["GET", "POST"])
 @login_required
 def new_post():
@@ -85,5 +87,13 @@ def add_to_wishlist(post_id):
     # login_user = User.query.filter_by(id=current_user.id).first()
     # login_user.wishlist.posts.append(post)
     current_user.wishlist.posts.append(post)
+    db.session.commit()
+    return redirect(request.referrer)
+
+
+@posts.route("/remove_wishlist/<int:post_id>", methods=["GET", "POST"])
+def remove_wishlist(post_id):
+    post = Post.query.filter(Post.id == post_id).first()
+    current_user.wishlist.posts.remove(post)
     db.session.commit()
     return redirect(request.referrer)

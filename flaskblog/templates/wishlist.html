@@ -18,6 +18,7 @@
     <p class="article-content">{{ post.content }}</p>
   </div>
 </article>
+<a  class="btn btn-info mb-4" href="{{ url_for('posts.remove_wishlist', post_id=post.id) }}">Remove</a>
 {% endfor %}
 {% else %}
 <p class="card-text">No products have been added to your wishlist yet</p>
