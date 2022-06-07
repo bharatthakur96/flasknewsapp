@@ -28,16 +28,19 @@
             <div class="navbar-nav mr-auto">
               <a class="nav-item nav-link" href="{{ url_for('main.home') }}">Home</a>
               <a class="nav-item nav-link" href="{{ url_for('main.about') }}">About</a>
+              
               <div style= "margin-left:50px">
-                <form class="d-flex" method="POST" action="">
-               
-                  
+                {% if form %}
+                <form class="d-flex" method="POST" action="{{ url_for('main.search_post') }}">
+                  {{ form.hidden_tag() }}
                   <input class="form-control me-2" type="search" placeholder="Search Products" aria-label="Search"
-                    name="searched"  >
+                  name="searched"  >
                   <button class="btn btn-outline-secondary" type="submit"
-                    style="background-color: rgb(12, 12, 11);">Search</button>
+                  style="background-color: rgb(12, 12, 11);">Search</button>
                 </form>
+                {% endif %}
               </div>
+              
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
