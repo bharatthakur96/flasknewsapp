@@ -74,8 +74,6 @@ def account():
         return redirect(url_for("users.account"))
     elif request.method == "GET":
         form.username.data = current_user.username
-        login_user = User.query.filter_by(id=current_user.id).first()
-        print("---------------------------", login_user.wishlist.posts)
         form.email.data = current_user.email
     image_file = url_for("static", filename="profile_pics/" + current_user.image_file)
     return render_template(

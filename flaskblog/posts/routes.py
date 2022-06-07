@@ -2,16 +2,17 @@ from ast import Return
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
 from flask_login import current_user, login_required
 from flaskblog import db
+from flaskblog.main.forms import SearchForm
 from flaskblog.models import Post, Wishlist, User
 from flaskblog.posts.forms import PostForm
 
 posts = Blueprint("posts", __name__)
 
 
+
 @posts.route("/post/new", methods=["GET", "POST"])
 @login_required
 def new_post():
-    print("create new post")
     form = PostForm()
     if form.validate_on_submit():
         post = Post(
@@ -20,8 +21,6 @@ def new_post():
             content=form.content.data,
             author=current_user,
         )
-        # login_user = User.query.filter_by(id=current_user.id).first()
-        # post.wishlist_id = current_user.wishlist.id     #dikkat
         db.session.add(post)
         db.session.commit()
         flash("Your post has been created!", "success")
@@ -33,11 +32,15 @@ def new_post():
 
 @posts.route("/post/<int:post_id>")
 def post(post_id):
-    try:
-        post = Post.query.get(post_id)
-        return render_template("post.html", title=post.title, post=post)
-    except:
-        return redirect(url_for("main.home"))
+	post = Post.query.get_or_404(post_id)
+	return render_template('post.html', post=post)
+    
+    # post = Post.query.filter_by(id=post_id).first()
+    # return render_template("post.html", title=post.title, post=post)
+
+
+
+
 
 
 @posts.route("/post/<int:post_id>/update", methods=["GET", "POST"])
@@ -75,15 +78,22 @@ def delete_post(post_id):
 
 @posts.route("/wishlist")
 def wishlist():
-    return render_template("wishlist.html")
+    form = SearchForm()
+    return render_template("wishlist.html", form=form)
 
 
 @posts.route("/add_to_wishlist/<int:post_id>", methods=["GET", "POST"])
 def add_to_wishlist(post_id):
-    # breakpoint()
     post = Post.query.filter(Post.id == post_id).first()
-    # login_user = User.query.filter_by(id=current_user.id).first()
-    # login_user.wishlist.posts.append(post)
     current_user.wishlist.posts.append(post)
+    db.session.commit()
+    return redirect(request.referrer)
+
+
+@posts.route("/remove_wishlist/<int:post_id>", methods=["GET", "POST"])
+def remove_wishlist(post_id):
+    # import pdb; pdb.set_trace()
+    post = Post.query.filter(Post.id == post_id).first()
+    current_user.wishlist.posts.remove(post)
     db.session.commit()
     return redirect(request.referrer)
