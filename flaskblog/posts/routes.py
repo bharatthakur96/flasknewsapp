@@ -77,12 +77,14 @@ def delete_post(post_id):
 
 
 @posts.route("/wishlist")
+@login_required
 def wishlist():
     form = SearchForm()
     return render_template("wishlist.html", form=form)
 
 
 @posts.route("/add_to_wishlist/<int:post_id>", methods=["GET", "POST"])
+@login_required
 def add_to_wishlist(post_id):
     post = Post.query.filter(Post.id == post_id).first()
     current_user.wishlist.posts.append(post)
@@ -91,6 +93,7 @@ def add_to_wishlist(post_id):
 
 
 @posts.route("/remove_wishlist/<int:post_id>", methods=["GET", "POST"])
+@login_required
 def remove_wishlist(post_id):
     # import pdb; pdb.set_trace()
     post = Post.query.filter(Post.id == post_id).first()

@@ -1,36 +1,67 @@
 {% extends "base.html" %}
 {% block content %}
-<u><h2>Breaking News</h2></u>
-    {% for post in posts.items %}
-        <article class="media content-section">
-          <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}">{{ post.author.username }}</a>
-              <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
-            </div>
-            <h3><a class="article-title" href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.title }}</a></h3>
-            <p class="article-content">{{ post.content }}</p>
+<u>
+  <h2>Breaking News</h2>
+</u>
+<div class="caontainer-fluid mt-3">
+  <div class="row">
+    <div class="col-lg-9 mx-auto">
+      {% for post in posts.items %}
+      <article class="media content-section">
+        <img class="rounded-circle article-img"
+          src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+        <div class="media-body">
+          <div class="article-metadata">
+            <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}">{{
+              post.author.username }}</a>
+            <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
           </div>
-          <a href="{{ url_for('posts.add_to_wishlist', post_id=post.id) }}">
-            {% if post in  current_user.wishlist.posts %}
-            <a href="{{ url_for('posts.remove_wishlist', post_id=post.id) }}"><img id="cart-icon" src="{{ url_for('static', filename='save.png') }}" width="30" height="35"></a>
-            {% else %}
-            <img id="cart-icon" src="{{ url_for('static', filename='wl.png') }}" width="25" height="25">
-            {% endif %}
-          </a>
-        </article>
-        {% endfor %}
-        <br><br>
-    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-      {% if page_num %}
-        {% if posts.page == page_num %}
-          <a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
-        {% else %}
-          <a class="btn btn-outline-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+          <h3><a class="article-title" href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.title }}</a></h3>
+          <p class="article-content">{{ post.content }}</p>
+        </div>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('posts.add_to_wishlist', post_id=post.id) }}">
+          {% if post in current_user.wishlist.posts %}
+          <a href="{{ url_for('posts.remove_wishlist', post_id=post.id) }}"><img id="cart-icon"
+              src="{{ url_for('static', filename='save.png') }}" width="30" height="35"></a>
+          {% else %}
+          <img id="cart-icon" src="{{ url_for('static', filename='wl.png') }}" width="25" height="25">
+          {% endif %}
+        </a>
         {% endif %}
+      </article>
+      {% endfor %}
+      <br><br>
+      {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+      {% if posts.page == page_num %}
+      <a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
       {% else %}
-        ...
+      <a class="btn btn-outline-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
       {% endif %}
-    {% endfor %}
+      {% else %}
+      ...
+      {% endif %}
+      {% endfor %}
+    </div>
+    <div class="col-lg-3 mx-auto">
+      {% if subscription and subscription.status == "active" %}
+      <h4>Your subscription:</h4>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ product.name }}</h5>
+          <p class="card-text">
+            {{ product.description }}
+            
+            <b> <h6>Active</h6></b>
+          </p>
+        </div>
+      </div>
+      {% else %}
+        <h4>Purchase Premium Plan subscription For paid News</h4>
+      <button type="submit" class="btn btn-primary" id="submitBtn">Subscribe</button>
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock content %}
