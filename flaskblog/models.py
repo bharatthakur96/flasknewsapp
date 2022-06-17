@@ -65,3 +65,10 @@ class Wishlist(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     posts = db.relationship('Post', backref='wish_list_post')
+
+
+class StripeCustomer(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    stripeCustomerId = db.Column(db.String(255), nullable=False)
+    stripeSubscriptionId = db.Column(db.String(255), nullable=False)

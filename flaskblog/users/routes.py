@@ -83,6 +83,7 @@ def account():
 
 @users.route("/user/<string:username>")
 def user_posts(username):
+    # breakpoint()
     page = request.args.get("page", 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()
     posts = (

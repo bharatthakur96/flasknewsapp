@@ -1,4 +1,4 @@
-import os
+from  os import environ
 
 
 class Config:
@@ -7,8 +7,12 @@ class Config:
     MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
-    MAIL_USERNAME = os.environ.get('EMAIL_USER')
-    MAIL_PASSWORD = os.environ.get('EMAIL_PASS')
+    MAIL_USERNAME = 'EMAIL_USER'
+    MAIL_PASSWORD = 'EMAIL_PASSWORD'
 
-
+class Stripe_keys:
+    secret_key = environ.get("STRIPE_SECRET_KEY")
+    publishable_key = environ.get("STRIPE_PUBLISHABLE_KEY")
+    price_id = environ.get("STRIPE_PRICE_ID")
+    endpoint_secret = environ.get("STRIPE_ENDPOINT_SECRET")
 
